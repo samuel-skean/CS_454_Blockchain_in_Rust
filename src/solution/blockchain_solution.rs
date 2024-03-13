@@ -4,39 +4,44 @@ use std::collections::HashSet;
 use std::rc::Rc;
 
 struct BlockchainSolution {
-    all_wallets: HashSet<WalletSolution>,
+    all_wallets: HashSet<Rc<WalletSolution>>,
 }
 
 impl BlockchainSolution {
     fn new() -> BlockchainSolution {
+        BlockchainSolution {
+            all_wallets: HashSet::new(),
+        }
+    }
+
+    fn create_wallet(&mut self, capacity: i32) -> Rc<WalletSolution> {
+        let new_wallet = Rc::new(WalletSolution::new(capacity));
+        self.all_wallets.insert(Rc::clone(&new_wallet));
+        new_wallet
+
+    }
+
+    fn create_coin(&self, id: i64) -> Rc<CoinSolution> {
+        Rc::new(CoinSolution::new(id))
+    }
+
+    fn add_coins(&mut self, wallet: &mut WalletSolution, coins: &HashSet<Rc<CoinSolution>>) -> bool {
         unimplemented!()
     }
 
-    fn create_wallet(capacity: i32) -> Rc<WalletSolution> {
+    fn transfer_coins(&mut self, from: &mut WalletSolution, to: &mut WalletSolution, coins: &HashSet<Rc<CoinSolution>>) -> bool {
         unimplemented!()
     }
 
-    fn create_coin(id: i32) -> Rc<CoinSolution> {
+    fn pay_rent(&mut self, wallet: &mut WalletSolution, coins: &HashSet<Rc<CoinSolution>>) -> bool {
         unimplemented!()
     }
 
-    fn add_coins(wallet: &mut WalletSolution, coins: &HashSet<CoinSolution>) -> bool {
+    fn redeem_coins(&mut self, wallet: &mut WalletSolution, coins: &HashSet<Rc<CoinSolution>>) -> bool {
         unimplemented!()
     }
 
-    fn transfer_coins(from: &mut WalletSolution, to: &mut WalletSolution, coins: &HashSet<CoinSolution>) -> bool {
-        unimplemented!()
-    }
-
-    fn pay_rent(wallet: &mut WalletSolution, coins: &HashSet<CoinSolution>) -> bool {
-        unimplemented!()
-    }
-
-    fn redeem_coins(wallet: &mut WalletSolution, coins: &HashSet<CoinSolution>) -> bool {
-        unimplemented!()
-    }
-
-    fn get_coins() -> HashSet<CoinSolution> {
+    fn get_coins(&self) -> HashSet<Rc<CoinSolution>> {
         unimplemented!()
     }
 }

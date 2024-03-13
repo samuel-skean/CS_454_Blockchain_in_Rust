@@ -1,19 +1,27 @@
-use std::{collections::BTreeSet, rc::Rc};
+use std::{cell::RefCell, collections::HashSet, hash::Hash, rc::Rc};
 
 use super::coin_solution::CoinSolution;
 
 
-#[derive(PartialEq, Eq, Hash)]
+#[derive(PartialEq, Eq, Debug)]
 pub struct WalletSolution {
-    capacity: i32,
-    contents: BTreeSet<Rc<CoinSolution>>
+    id: usize,
+    pub capacity: usize,
+    pub contents: RefCell<HashSet<Rc<CoinSolution>>>
+}
+
+impl Hash for WalletSolution {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.id.hash(state);
+    }
 }
 
 impl WalletSolution {
-    pub fn new(capacity: i32) -> WalletSolution {
+    pub fn new(id: usize, capacity: usize) -> WalletSolution {
         WalletSolution {
+            id,
             capacity,
-            contents: BTreeSet::new(),
+            contents: RefCell::new(HashSet::new()),
         }
     }
 }

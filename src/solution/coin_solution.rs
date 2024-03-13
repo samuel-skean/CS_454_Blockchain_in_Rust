@@ -1,6 +1,6 @@
 use std::{cell::Cell, hash::Hash};
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum CoinStatus {
     Mined,
     InCirculation,
@@ -8,9 +8,10 @@ pub enum CoinStatus {
     Redeemed,
 }
 
+#[derive(Debug)]
 pub struct CoinSolution {
     id: i64,
-    status: Cell<CoinStatus>,
+    pub status: Cell<CoinStatus>,
 }
 
 // Heavily relying on the invariant that no two coins share the same id.

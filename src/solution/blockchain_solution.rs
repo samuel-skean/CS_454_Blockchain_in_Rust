@@ -35,7 +35,7 @@ impl BlockchainSolution {
             for c in coins.iter() {
                 c.status.set(CoinStatus::InCirculation);
             }
-            wallet.contents.borrow_mut().extend(coins.iter().map(|c| {Rc::clone(c)}));
+            wallet.contents.borrow_mut().extend(coins.iter().map(|c| Rc::clone(c)));
             true
         } else {
             false
@@ -43,7 +43,15 @@ impl BlockchainSolution {
     }
 
     pub fn transfer_coins(&mut self, from: &WalletSolution, to: &WalletSolution, coins: &HashSet<Rc<CoinSolution>>) -> bool {
-        unimplemented!()
+        let room_for_more_coins = to.capacity - to.contents.borrow().len();
+
+        if from.contents.borrow().is_superset(coins) && room_for_more_coins >= coins.len() {
+            from.contents.borrow_mut().retain(|c| !coins.contains(c)); // Seems like the easiest way to remove all from a different set... don't know if it is. Kinda seems bad.
+            to.contents.borrow_mut().extend(coins.iter().map(|c| Rc::clone(c)));
+            true
+        } else {
+            false
+        }
     }
 
     pub fn pay_rent(&mut self, wallet: &WalletSolution, coins: &HashSet<Rc<CoinSolution>>) -> bool {
